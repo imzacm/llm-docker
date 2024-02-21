@@ -1,7 +1,5 @@
 # Based on https://gist.github.com/jsjolund/c03089becae815ad6cdd863d1a3f20d4
-
-ARG BASE_IMAGE=nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04
-FROM ${BASE_IMAGE} AS base
+FROM base_image AS base
 
 ENV DEBIAN_FRONTEND noninteractive\
     SHELL=/bin/bash\
@@ -14,9 +12,9 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt install -y --no-install-recommends \
-    git wget curl build-essential \
-    python3-dev python3-venv python3-pip python-is-python3 && \
-    apt-get clean
+      git wget curl build-essential \
+      python3-dev python3-venv python3-pip python-is-python3 && \
+    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install yq
 ARG YQ_VERSION=latest
@@ -81,7 +79,9 @@ FROM lollms AS debug
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt install -y --no-install-recommends \
-    vim openssh-server rsync
+      vim openssh-server rsync && \
+    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 RUN sed -i 's/PermitRootLogin prohibit-password//' /etc/ssh/sshd_config && \
     printf 'PermitRootLogin yes\n' >> /etc/ssh/sshd_config && \
     printf 'password\npassword\n' | passwd && \
