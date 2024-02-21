@@ -47,4 +47,7 @@ target "lollms-webui" {
         UPDATE_SUBMODULES = item.update_submodules
     }
     target = "lollms"
+
+    cache-from = ["type=registry,ref=imzacm/lollms-webui:${item.tag}"]
+    cache-to = ["type=inline,mode=max"]
 }
