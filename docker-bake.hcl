@@ -2,6 +2,10 @@ variable "BASE_IMAGE" {
     default = "nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04"
 }
 
+variable "LOLLMS_COMMIT" {
+    default = ""
+}
+
 group "default" {
     targets = ["lollms-webui"]
 }
@@ -29,7 +33,10 @@ target "lollms-webui" {
     }
     dockerfile = "Dockerfile"
     context = "./lollms-webui"
-    tags = ["imzacm/lollms-webui:${item.tag}"]
+    tags = [
+        "imzacm/lollms-webui:${item.tag}",
+        notequal("", LOLLMS_COMMIT) ? "imzacm/lollms-webui:${item.tag}-${LOLLMS_COMMIT}" : ""
+    ]
     contexts = {
         base_image = "docker-image://${BASE_IMAGE}"
     }
