@@ -43,3 +43,6 @@ jobs:
         with:
           files: docker-bake.hcl,.env.hcl
           push: ${{ env.PUSH_IMAGES == 'true' }}
+          set: |
+            lollms-webui*.cache-from=type=registry,ref=imzacm/lollms-webui:buildcache
+            lollms-webui*.cache-to=type=registry,ref=imzacm/lollms-webui:buildcache,mode=max
