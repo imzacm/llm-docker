@@ -36,6 +36,17 @@ if [[ "${UPDATE_SUBMODULES}" != true ]]; then
   yq -i '.auto_update = false' "${WEBUI_CONFIG}"
 fi
 
+# Remove old Runpod origins
+yq -i 'del( .allowed_origins | .[] | select(. == "https://*.proxy.runpod.net") )' "${WEBUI_CONFIG}"
+
+# Add Runpod origin
+if [[ -n $RUNPOD_POD_ID ]]; then
+  RUNPOD_ORIGIN="https://${RUNPOD_POD_ID}-${WEBUI_PORT}.proxy.runpod.net"
+  echo "Adding '${RUNPOD_ORIGIN}' to allowed origins"
+  RUNPOD_ORIGIN="${RUNPOD_ORIGIN}" \
+    yq -i '.allowed_origins += strenv(RUNPOD_ORIGIN)' "${WEBUI_CONFIG}"
+fi
+
 # Activate the python environment and start the web server
 source /opt/venv/bin/activate
 cd "${WEBUI_DIR}"
