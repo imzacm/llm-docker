@@ -35,7 +35,9 @@ target "lollms-webui" {
     context = "./lollms-webui"
     tags = [
         "imzacm/lollms-webui:${item.tag}",
-        notequal("", LOLLMS_COMMIT) ? "imzacm/lollms-webui:${item.tag}-${LOLLMS_COMMIT}" : ""
+        "ghcr.io/imzacm/llm-docker:lollms-webui-${item.tag}",
+        notequal("", LOLLMS_COMMIT) ? "imzacm/lollms-webui:${item.tag}-${LOLLMS_COMMIT}" : "",
+        notequal("", LOLLMS_COMMIT) ? "ghcr.io/imzacm/llm-docker:lollms-webui-${item.tag}-${LOLLMS_COMMIT}" : ""
     ]
     contexts = {
         base_image = "docker-image://${BASE_IMAGE}"
