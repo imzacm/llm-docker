@@ -16,6 +16,10 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      # See https://github.com/orgs/community/discussions/25678#discussioncomment-5242449
+      - name: Delete huge unnecessary tools folder
+        run: rm -rf /opt/hostedtoolcache
+
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build env
